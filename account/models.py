@@ -55,7 +55,6 @@ class UserInfo(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name} ({self.user.email})"
         # Delete image files associated with image fields
         image_fields = [field for field in self._meta.fields if isinstance(field, models.ImageField)]
         for field in image_fields:
