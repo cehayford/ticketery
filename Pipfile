@@ -13,6 +13,7 @@ djoser = "*"
 djangorestframework-simplejwt = "*"
 pillow = "*"
 psycopg2-binary = "*"
+django-taggit = "*"
 
 [dev-packages]
 

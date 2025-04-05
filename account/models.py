@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.contrib.auth.models import AbstractUser, BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 import os
 from uuid import uuid4
 
@@ -45,6 +45,7 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return f"{self.first_name} {self.last_name} {self.email} {self.username}"
 
+
 class UserInfo(models.Model):
     userid = models.UUIDField(verbose_name='UserId', default=uuid4, editable=False)
     user = models.OneToOneField(CustomUser, related_name='user_info', on_delete=models.CASCADE)
@@ -54,7 +55,7 @@ class UserInfo(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
+    def __str__(self, *args, **kwargs):
         # Delete image files associated with image fields
         image_fields = [field for field in self._meta.fields if isinstance(field, models.ImageField)]
         for field in image_fields:
@@ -66,10 +67,12 @@ class UserInfo(models.Model):
 
 
 class BookingHistory(models.Model):
-    user = models.OneToOneField
+    booking_id = models.UUIDField(verbose_name='BookingId', default=uuid4, editable=False)
     payment_methods = models.JSONField(blank=True, null=True)
     user = models.OneToOneField(CustomUser, related_name='booking_history', on_delete=models.CASCADE)
     membership_status = models.CharField(max_length=50, blank=True, null=True)
     subscription_details = models.JSONField(blank=True, null=True)
     two_factor_enabled = models.BooleanField(default=False)
     recent_login_activity = models.JSONField(default=list, blank=True)
+    tags = models.JSONField(default=list, blank=True)
+
