@@ -43,14 +43,11 @@ class CustomUser(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        User.username = self.first_name + " " + self.last_name
         return f"{self.first_name} {self.last_name} {self.email} {self.username}"
-
 
 class UserInfo(models.Model):
     userid = models.UUIDField(verbose_name='UserId', default=uuid4, editable=False)
-    first_name = models.ForeignKey(User.first_name, related_name='first_name', on_delete=models.CASCADE)
-    last_name = models.ForeignKey(User.last_name, related_name='last_name', on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, related_name='user_info', on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=15, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     user_address = models.TextField(max_length=50, blank=True)
@@ -58,10 +55,7 @@ class UserInfo(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        User.username = self.first_name + " " + self.last_name
-        return User.username
-    
-    def delete(self, *args, **kwargs):
+        return f"{self.user.first_name} {self.user.last_name} ({self.user.email})"
         # Delete image files associated with image fields
         image_fields = [field for field in self._meta.fields if isinstance(field, models.ImageField)]
         for field in image_fields:
@@ -75,7 +69,7 @@ class UserInfo(models.Model):
 class BookingHistory(models.Model):
     user = models.OneToOneField
     payment_methods = models.JSONField(blank=True, null=True)
-    event_preferences = models.JSONField(default=dict)
+    user = models.OneToOneField(CustomUser, related_name='booking_history', on_delete=models.CASCADE)
     membership_status = models.CharField(max_length=50, blank=True, null=True)
     subscription_details = models.JSONField(blank=True, null=True)
     two_factor_enabled = models.BooleanField(default=False)

@@ -7,10 +7,12 @@ name = "pypi"
 django = "*"
 djangorestframework = "*"
 six = "*"
+django-utils-six = "*"
 django-oauth-toolkit = "*"
 djoser = "*"
 djangorestframework-simplejwt = "*"
 pillow = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
