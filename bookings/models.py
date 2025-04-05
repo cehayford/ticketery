@@ -17,7 +17,7 @@ class VenueOfEvent(models.Model):
     address = models.CharField(max_length=200, unique=True)
     capacity = models.IntegerField()
     seating_layout = models.JSONField()
-    amenties = models.JSONField()
+    amenities = models.JSONField()
     other_details = models.JSONField()
 
 
@@ -28,8 +28,8 @@ class Event(models.Model):
     category = models.ForeignKey(EventCategories, on_delete=models.PROTECT, related_name="events"
     )
     VenueOfEvent = models.ForeignKey(VenueOfEvent, on_delete=models.PROTECT, related_name="events", name="venue-of-event")
-    starting-time = models.DateTimeField()
-    ending-time = models.DateTimeField()
+    starting_time = models.DateTimeField()
+    ending_time = models.DateTimeField()
     image = models.ImageField(upload_to="events_image/", null=True, blank=True)
     is_featured = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -38,7 +38,7 @@ class Event(models.Model):
     tags = TaggableManager()
     
     def __str__(self):
-        return f"{self.title} {self.description} {self.category} {self.VenueOfEvent} {self.starting-time} {self.ending-time} {self.image} {self.is_featured} {self.created_at} {self.partnership} {self.updated_at} {self.tags}"
+        return f"{self.title} {self.description} {self.category} {self.VenueOfEvent} {self.starting_time} {self.ending_time} {self.image} {self.is_featured} {self.created_at} {self.partnership} {self.updated_at} {self.tags}"
     
 
 class TicketType(models.Model):
