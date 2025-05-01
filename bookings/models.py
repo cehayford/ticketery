@@ -71,7 +71,7 @@ class Bookings(models.Model):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
 
   
-class TicketbookingSys(models.Model):
+class TicketBookingSys(models.Model):
     booking = models.ForeignKey(Bookings, on_delete=models.CASCADE, related_name='tickets')
     ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
