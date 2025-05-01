@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'six',
     'oauth2_provider',
     'djoser',
+    'taggit',
     # project folders
     'account',
     'bookings'

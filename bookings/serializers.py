@@ -37,13 +37,14 @@ class TicketTypeSerializer(ModelSerializer):
     class Meta:
         model = TicketType
         fields = ['event', 'ticket_type', 'price', 'quantity_available', 'sold_quantity', 'created_at']
-
+        
 
 # booking serializer
 class BookingsSerializer(ModelSerializer):
     class Meta:
         model = Bookings
         fields = "__all__"
+
 
 
 class TicketBookingSysSerializer(ModelSerializer):
@@ -53,10 +54,12 @@ class TicketBookingSysSerializer(ModelSerializer):
         model = TicketBookingSys
         fields = ["id", "booking", "ticket_type", "quantity", "seat_numbers", "unit_price", "total_price"]
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation["ticket_type_details"] = {
-            "type": instance.ticket_type.ticket_type,
-            "price": instance.ticket_type.price,
-        }
-        return representation
+
+    def save(self, *args, **kwargs):
+        if self.quantity > self.ticket_type.quantity_available:
+            raise ValidationError("There are not enough tickets available.")
+        self.total_price = self.unit_price * self.quantity
+        self.ticket_type.sold_quantity += self.quantity
+        self.ticket_type.quantity_available -= self.quantity
+        self.ticket_type.save()
+        super().save(*args, **kwargs)

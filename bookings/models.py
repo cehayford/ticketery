@@ -1,6 +1,7 @@
 from django.db import models
 from taggit.managers import TaggableManager
-from core.settings import settings
+from django.conf import settings
+from django.core.exceptions import ValidationError as valid_er
 
 
 class EventCategories(models.Model):
@@ -79,3 +80,11 @@ class TicketBookingSys(models.Model):
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
 
+    def save(self, *args, **kwargs):
+        if self.quantity > self.ticket_type.quantity_available:
+            raise valid_er("There is no enough tickets available.")
+        self.total_price = self.unit_price * self.quantity
+        self.ticket_type.sold_quantity += self.quantity
+        self.ticket_type.quantity_available -= self.quantity
+        self.ticket_type.save()
+        super().save(*args, **kwargs)   
