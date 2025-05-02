@@ -69,10 +69,13 @@ class UserInfo(models.Model):
 class BookingHistory(models.Model):
     booking_id = models.UUIDField(verbose_name='BookingId', default=uuid4, editable=False)
     payment_methods = models.JSONField(blank=True, null=True)
-    user = models.OneToOneField(CustomUser, related_name='booking_history', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, related_name='booking_history', on_delete=models.CASCADE)
     membership_status = models.CharField(max_length=50, blank=True, null=True)
     subscription_details = models.JSONField(blank=True, null=True)
     two_factor_enabled = models.BooleanField(default=False)
     recent_login_activity = models.JSONField(default=list, blank=True)
     tags = models.JSONField(default=list, blank=True)
+
+    def __str__(self):
+        return f"Booking ID: {self.booking_id}, User: {self.user.email}, Membership Status: {self.membership_status}"
 

@@ -10,5 +10,5 @@ router.register(r'ticket-types', TicketTypeViewSet, basename='ticket-types')
 router.register(r'ticket-bookings', TicketBookingViewSet, basename='ticket-bookings')
 
 urlpatterns = [
-    path('/bookings/', include(router.urls)),
+    path('', include(router.urls)),
 ]
