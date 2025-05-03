@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <title>single sign-on auhthentication</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .header img {
+            max-width: 100px;
+            margin-bottom: 10px;
+        }
+        .content {
+            padding: 20px;
+            color: #333333;
+            line-height: 1.6;
+        }
+        .content h2 {
+            color: #007bff;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .footer {
+            background-color: #f0f0f0;
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            color: #666666;
+        }
+        @media only screen and (max-width: 600px) {
+            .container {
+            width: 100%;
+            margin: 0;
+            border-radius: 0;
+            }
+            .content {
+            padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% block content%}
+  <div class="container">
+    <div class="header">
+      <h1>SSO Authentication</h1>
+    </div>
+    <div class="content">
+      <h2>Hello,</h2>
+      <p>Thank you for joining our platform. We are excited to have you on board. Please click the button below to activate your account and get started.</p>
+      <a href="http://{{ domain }}{% url 'authentication_app:account_activate' uidb64=uid token=token %}" class="button">Activate Account</a>
+      <p>If you have any questions, feel free to contact our support team.</p>
+    </div>
+    <div class="footer">
+      &copy; 2025 Ticketery. All rights reserved.
+    </div>
+  </div>
+  {% endblock %}
+</body>
+</html>
