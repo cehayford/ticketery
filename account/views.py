@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
-from .serializers import UserSerializer, Userinfoserializer, Bookinghistoryserializer
+from .serializers import UserSerializer, AuthorizationTokenSerializer, Userinfoserializer, Bookinghistoryserializer
 from rest_framework.response import Response
 from rest_framework.status import *
 from .models import UserInfo, BookingHistory
@@ -16,6 +16,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.core.mail import EmailMessage
 from django.conf import settings
+from rest_framework_sso import views
 
 
 class LogoutView(APIView):
@@ -189,3 +190,9 @@ class sso_authentication_confirm(APIView):
                     return Response({"message": "User is not authenticated"}, status=HTTP_401_UNAUTHORIZED)
             return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
         return Response({"error": "Token is invalid or expired"}, status=HTTP_400_BAD_REQUEST)
+
+
+
+class ObtainAuthorizationTokenView(views.ObtainAuthorizationTokenView):
+    serializer_class = AuthorizationTokenSerializer
+

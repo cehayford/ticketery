@@ -12,6 +12,7 @@ djoser = "*"
 pillow = "*"
 psycopg2-binary = "*"
 django-taggit = "*"
+djangorestframework-sso = "*"
 
 [dev-packages]
 

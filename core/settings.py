@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'six',
     'djoser',
     'taggit',
+    'rest_framework_sso',
     # project folders
     'account',
     'bookings'
@@ -150,3 +151,8 @@ EMAIL_USE_SSL = True
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'sngodson@gmail.com'
 EMAIL_HOST_PASSWORD = 'tcqcnrvninscmoxw'
+
+
+REST_FRAMEWORK_SSO = {
+    'CREATE_AUTHORIZATION_PAYLOAD': 'account.payload.create_authorization_payload',
+}

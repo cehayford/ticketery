@@ -1,6 +1,6 @@
 from djoser.serializers import UserSerializer
 from rest_framework import serializers
-from .models import CustomUser,UserInfo, BookingHistory
+from .models import CustomUser, UserInfo, BookingHistory
 
 class Userserializer(UserSerializer):
     class Meta(UserSerializer.Meta):
@@ -19,4 +19,13 @@ class Bookinghistoryserializer(serializers.ModelSerializer):
     class Meta:
         model = BookingHistory
         fields = '__all__'
-        
+
+class AuthorizationTokenSerializer(serializers.Serializer):
+    account = serializers.HyperlinkedRelatedField(
+        queryset=CustomUser.objects.all(),
+        required=True,
+        view_name='api:account-detail',
+)
+
+    class Meta:
+        fields = ['account']
