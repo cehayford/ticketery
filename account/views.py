@@ -8,14 +8,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
-from django.contrib.auth.tokens import default_token_generator
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes
-from django.template.loader import render_to_string
-from django.utils.html import strip_tags
-from django.core.mail import EmailMessage
-from django.conf import settings
 from rest_framework_sso import views
 
 
@@ -143,55 +135,6 @@ class UpdateUserInfoView(APIView):
         except Exception as e:
             return Response({'error':str(e)}, status=HTTP_500_INTERNAL_SERVER_ERROR)
         
-
-# Watch it again and again
-class sso_authentication(APIView):
-    def post(self, request, *args, **kwargs):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            email = serializer.validated_data.get('email')
-            try:
-                user = User.objects.get(email=email)
-                token, _ = Token.objects.get_or_create(user=user)
-                current_site = get_current_site(request)
-                uid = urlsafe_base64_encode(force_bytes(user.pk))
-                body = render_to_string('email_template.html', {
-                    'email': user.email,
-                    'domain': current_site.domain,
-                    'uid': uid,
-                    'token': token.key,
-                })
-                subject = 'Activate your account'
-                email_body = strip_tags(body)
-                email_message = EmailMessage(subject, email_body, settings.EMAIL_HOST_USER, [user.email])
-                email_message.send()
-                return Response({"token": token.key, "message": "Email sent successfully"}, status=HTTP_201_CREATED)
-            except User.DoesNotExist:
-                return Response({"error": "User not found"}, status=HTTP_404_NOT_FOUND)
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-
-
-class sso_authentication_confirm(APIView):
-    def post(self, request, uidb64, token, *args, **kwargs):
-        try:
-            uid = urlsafe_base64_decode(uidb64).decode()
-            user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            user = None
-        if user is not None and default_token_generator.check_token(user, token):
-            serializer = UserSerializer(data=request.data)
-            if serializer.is_valid():
-                email = serializer.validated_data.get('email')
-                user.email = email
-                user.save()
-                if user.is_active:
-                    return Response({"message": "User is authenticated"}, status=HTTP_200_OK)
-                else:
-                    return Response({"message": "User is not authenticated"}, status=HTTP_401_UNAUTHORIZED)
-            return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-        return Response({"error": "Token is invalid or expired"}, status=HTTP_400_BAD_REQUEST)
-
-
 
 class ObtainAuthorizationTokenView(views.ObtainAuthorizationTokenView):
     serializer_class = AuthorizationTokenSerializer
