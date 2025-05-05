@@ -3,6 +3,8 @@ from rest_framework import serializers
 from .models import CustomUser, UserInfo, BookingHistory
 
 class Userserializer(UserSerializer):
+    id = serializers.UUIDField(read_only = True)
+
     class Meta(UserSerializer.Meta):
         model = CustomUser
         fields = '__all__'
